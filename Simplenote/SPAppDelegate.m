@@ -125,7 +125,7 @@
     if (legacySortPref != nil) {
         
         if ([legacySortPref integerValue] == 2) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SPAlphabeticalSortPref];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SPPostsSortPref];
         }
         
         CFPreferencesSetAppValue(CFSTR("sortMode"), NULL, kCFPreferencesCurrentApplication);

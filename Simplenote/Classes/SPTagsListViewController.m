@@ -14,6 +14,7 @@
 #import "SPNoteListViewController.h"
 #import "SPTagListViewCell.h"
 #import "SPObjectManager.h"
+#import "SPOptionsViewController.h"
 #import "SPBorderedView.h"
 #import "SPButton.h"
 #import "SPTracker.h"
@@ -126,6 +127,7 @@ static UIEdgeInsets SPButtonImageInsets = {0, -10, 0, 0};
     [nc addObserver:self selector:@selector(menuDidChangeVisibility:) name:UIMenuControllerDidShowMenuNotification object:nil];
 
     [nc addObserver:self selector:@selector(themeDidChange) name:VSThemeManagerThemeDidChangeNotification object:nil];
+    [nc addObserver:self selector:@selector(updateSortOrder:) name:SPTagsSortPreferenceChangedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -210,8 +212,12 @@ static UIEdgeInsets SPButtonImageInsets = {0, -10, 0, 0};
 }
 
 - (void)menuDidChangeVisibility:(UIMenuController *)menuController {
-    
     self.tableView.allowsSelection = ![UIMenuController sharedMenuController].menuVisible;
+}
+
+- (void)updateSortOrder:(id)sender {
+    self.fetchedResultsController.fetchRequest.sortDescriptors = [self sortDescriptors];
+    [self performFetch];
 }
 
 #pragma mark - Button actions
@@ -413,6 +419,11 @@ static UIEdgeInsets SPButtonImageInsets = {0, -10, 0, 0};
         [SPTracker trackTagRowDeleted];
 		[self removeTagAtIndexPath:indexPath];
     }
+}
+
+- (BOOL)tableView:(UITableView *) tableView canMoveRowAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    return ![[NSUserDefaults standardUserDefaults] boolForKey:SPTagsSortPref];
 }
 
 #pragma mark UITagListViewCellDelegate
@@ -673,10 +684,22 @@ static UIEdgeInsets SPButtonImageInsets = {0, -10, 0, 0};
 
 - (NSArray *)sortDescriptors
 {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"index" ascending:YES];
-    NSArray *sortDescriptors = @[sortDescriptor];
+    NSString *sortKey = nil;
+    BOOL ascending = NO;
+    SEL sortSelector = nil;
     
-    return sortDescriptors;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SPTagsSortPref]) {
+        sortKey = @"name";
+        ascending = YES;
+        sortSelector = @selector(caseInsensitiveCompare:);
+    } else {
+        sortKey = @"index";
+        ascending = YES;
+    }
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortKey ascending:ascending selector:sortSelector];
+    
+    return @[sortDescriptor];
 }
 
 - (void)performFetch {

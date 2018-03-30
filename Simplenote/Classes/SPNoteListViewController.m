@@ -86,7 +86,7 @@
                                                    object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateSortOrder:)
-                                                     name:SPAlphabeticalSortPreferenceChangedNotification
+                                                     name:SPPostsSortPreferenceChangedNotification
                                                    object:nil];
         
         // voiceover status is tracked because the custom animated transition
@@ -643,7 +643,7 @@
     BOOL ascending = NO;
     SEL sortSelector = nil;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SPAlphabeticalSortPref]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SPPostsSortPref]) {
         
         sortKey = @"content";
         ascending = YES;

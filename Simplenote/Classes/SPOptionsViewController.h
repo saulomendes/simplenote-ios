@@ -24,5 +24,7 @@
 
 extern NSString *const SPCondensedNoteListPref;
 extern NSString *const SPCondensedNoteListPreferenceChangedNotification;
-extern NSString *const SPAlphabeticalSortPref;
-extern NSString *const SPAlphabeticalSortPreferenceChangedNotification;
+extern NSString *const SPPostsSortPref;
+extern NSString *const SPPostsSortPreferenceChangedNotification;
+extern NSString *const SPTagsSortPref;
+extern NSString *const SPTagsSortPreferenceChangedNotification;
