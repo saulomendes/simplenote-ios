@@ -1,0 +1,4 @@
+language: objective-c
+script:
+  - xctool -workspace Simplenote.xcworkspace -scheme Simplenote -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+  - xctool test -workspace Simplenote.xcworkspace -scheme SimplenoteTests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
